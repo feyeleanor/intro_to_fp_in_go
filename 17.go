@@ -1,21 +1,21 @@
 package main
+
 import . "fmt"
 
 func main() {
-	c := make(chan int)
-	go func() {
-		for _, v := range []int{0, 2, 4, 6, 8} {
-			c <- v
-		}
-		close(c)
-	}()
-	print_channel(c)
+	s := []int{0, 2, 4, 6, 8}
+	print_slice(func(i int) int {
+		return s[i]
+	})
 }
 
-func print_channel(c chan int) (i int) {
-	for v := range c {
-		Printf("%v: %v\n", i, v)
-		i++
+func print_slice[T any](f Iterable[T]) {
+	defer func() {
+		recover()
+	}()
+	for i := 0; ; i++ {
+		Printf("%v: %v\n", i, f(i))
 	}
-	return
 }
+
+type Iterable[T any] func(int) T

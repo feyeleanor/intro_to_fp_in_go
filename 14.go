@@ -1,18 +1,22 @@
 package main
+
 import . "fmt"
 
 func main() {
-	s := []int{0, 2, 4, 6, 8}
-	print_slice(func(i int) int {
-		return s[i]
-	})
+	print_slice(yield, 0, 2, 4, 6, 8)
 }
 
-func print_slice(s interface{}) {
-	switch s := s.(type) {
-	case func(int) int:
-		for i := 0; i < 5; i++ {
-			Printf("%v: %v\n", i, s(i))
-		}
+func print_slice(f Iterator, s ...int) {
+	defer func() {
+		recover()
+	}()
+	for i := 0; ; i++ {
+		Printf("%v: %v\n", i, f(i, s...))
 	}
 }
+
+func yield(i int, s ...int) int {
+	return s[i]
+}
+
+type Iterator func(int, ...int) int

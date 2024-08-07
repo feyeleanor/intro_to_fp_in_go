@@ -1,18 +1,20 @@
 package main
+
 import . "fmt"
 
 func main() {
-	s := []int{0, 2, 4, 6, 8}
-	print_slice(s, func(s []int, i int) int {
-		return s[i]
-	})
+	print_slice(yield, 0, 2, 4, 6, 8)
 }
 
-func print_slice(s []int, f func([]int, int) int) {
-defer func() {
-			recover()
+func print_slice(f func(int, ...int) int, s ...int) {
+	defer func() {
+		recover()
 	}()
 	for i := 0; ; i++ {
-		Printf("%v: %v\n", i, f(s, i))
+		Printf("%v: %v\n", i, f(i, s...))
 	}
+}
+
+func yield(i int, s ...int) int {
+	return s[i]
 }

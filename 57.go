@@ -1,43 +1,23 @@
 package main
-import . "fmt"
-import "os"
-import "strconv"
+
+import (
+	"os"
+	"strconv"
+)
 
 func main() {
 	for _, v := range os.Args[1:] {
-		OnPanicFor(UseNumericParam(v, func(i int) {
-			Printf("%v!: %v\n", i, Factorial(i))
-		}), PrintErrorMessage)
+		x, _ := strconv.Atoi(v)
+		a.Add(x)
 	}
+	os.Exit(int(a))
 }
 
-func UseNumericParam(v string, f func(i int)) func() {
-	return func() {
-		if x, e := strconv.Atoi(v); e == nil {
-			f(x)
-		} else {
-			panic(v)
-		}
-	}
-}
+var a Accumulator
 
-func OnPanicFor(f, e func()) {
-	defer e()
-	f()
-}
+type Accumulator int
 
-func PrintErrorMessage() {
-	if x := recover(); x != nil {
-		Printf("no defined value for %v\n", x)
-	}
-}
-
-func Factorial(n int) (r int) {
-	if n < 0 {
-		panic(n)
-	}
-	for r = 1; n > 0; n-- {
-		r *= n
-	}
-	return
+func (a Accumulator) Add(y int) {
+	// This never updates variable a
+	a += Accumulator(y)
 }

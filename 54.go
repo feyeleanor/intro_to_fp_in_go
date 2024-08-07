@@ -1,38 +1,25 @@
 package main
-import . "fmt"
-import "os"
-import "strconv"
+
+import (
+	"os"
+	"strconv"
+)
 
 func main() {
+	var sum int
 	for _, v := range os.Args[1:] {
-		SafeExecute(func(i int) {
-			Printf("%v!: %v\n", i, Factorial(i))
-		})(v)
+		x, _ := strconv.Atoi(v)
+		sum = add(sum, x)
 	}
+	os.Exit(sum)
 }
 
-func SafeExecute(f func(int)) func(string) {
-	return func(v string) {
-		defer func() {
-			if x := recover(); x != nil {
-				Printf("no defined value for %v\n", x)
-			}
-		}()
-
-		if x, e := strconv.Atoi(v); e == nil {
-			f(x)
-		} else {
-			panic(v)
-		}
-	}
+type Scalar interface {
+	int | int8 | int16 | int32 | int64 |
+		uint | uint8 | uint16 | uint32 | uint64 |
+		float32 | float64
 }
 
-func Factorial(n int) (r int) {
-	if n < 0 {
-		panic(n)
-	}
-	for r = 1; n > 0; n-- {
-		r *= n
-	}
-	return
+func add[T Scalar](x, y T) T {
+	return x + y
 }

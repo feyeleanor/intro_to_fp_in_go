@@ -1,17 +1,35 @@
 package main
-import "os"
-import "strconv"
+
+import (
+	"fmt"
+	. "reflect"
+)
 
 func main() {
-	for _, v := range os.Args[1:] {
-		x, _ := strconv.Atoi(v)
-		accumulate(x)
-	}
-	os.Exit(y)
+	s := []int{0, 2, 4, 6, 8}
+	print_values(s)
+	print_values(func(i int) (v int, ok bool) {
+		if ok = (-1 < i) && (i < len(s)); ok {
+			v = s[i]
+		}
+		return
+	})
 }
 
-var y int
-
-func accumulate(x int) {
-	y += x
+func print_values(s any) {
+	switch s := ValueOf(s); s.Kind() {
+	case Func:
+		for i := 0; ; i++ {
+			p := []Value{ValueOf(i)}
+			if r := s.Call(p); r[1].Bool() {
+				fmt.Printf("5>s(%v): %v\n", i, s.Call(p)[0].Interface())
+			} else {
+				return
+			}
+		}
+	case Slice:
+		for i := 0; i < s.Len(); i++ {
+			fmt.Printf("6>s[%v]: %v\n", i, s.Index(i).Interface())
+		}
+	}
 }

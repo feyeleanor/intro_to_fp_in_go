@@ -1,38 +1,39 @@
 package main
-import "os"
-import "strconv"
+
+import . "fmt"
 
 func main() {
-	a := MakeAccumulator()
-	for _, v := range os.Args[1:] {
-		x, _ := strconv.Atoi(v)
-		a.Add(MakeAccumulator()(x))
-	}
-	os.Exit(a.Int())
+	s := &Range[int]{0, 2, 5}
+	print_values(s)
+	print_values(s)
 }
 
-type Accumulator func(int) int
-type Integer interface {
-	Int() int
+func print_values[T any](s Iterable[T]) (i int) {
+	s.Each(func(v T) {
+		Printf("%v: %v\n", i, v)
+		i++
+	})
+	return i
 }
 
-func MakeAccumulator() Accumulator {
-	var y int
-	return func(x int) int {
-		y += x
-		return y
-	}
+type Iterable[T any] interface {
+	Each(func(T))
 }
 
-func (a Accumulator) Int() int {
-	return a(0)
+type Ordinal interface {
+	int | int8 | int16 | int32 | int64 | uint | uint8 | uint16 | uint32 | uint64
 }
 
-func (a Accumulator) Add(x interface{}) {
-	switch x := x.(type) {
-	case int:
-		a(x)
-	case Integer:
-		a(x.Int())
+type Range[T Ordinal] struct {
+	start T
+	step  T
+	count T
+}
+
+func (r *Range[T]) Each(f func(T)) {
+	// This makes the Range mutable, so it will only iterate once
+	for ; r.count > 0; r.count-- {
+		f(r.start)
+		r.start += r.step
 	}
 }

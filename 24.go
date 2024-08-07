@@ -1,35 +1,36 @@
 package main
-import . "reflect"
+
 import . "fmt"
 
 func main() {
-	s := []int{0, 2, 4, 6, 8}
-		print_values(s)
-		print_values(func(i int) int {
-		return s[i]
-	})
+	c1, g1 := makeGenerator[int](0, 2, 4, 6, 8)
+	go g1()
+	print_channel(c1)
+
+	c2, g2 := makeGenerator[int](0, 2, 4, 6, 8)
+	go g2()
+	print_channel(c2)
 }
 
-func print_values(s interface{}) {
-	switch s := ValueOf(s); s.Kind() {
-	case Func:
-		p := make([]Value, 1)
-		for_each(func(i int) {
-			p[0] = ValueOf(i)
-			Printf("%v: %v\n", i, s.Call(p)[0].Interface())
-		})
-	case Slice:
-		for_each(func(i int) {
-			Printf("%v: %v\n", i, s.Index(i).Interface())
-		})
+func print_channel[T any](c chan Entry[T]) (i int) {
+	for v := range c {
+		Printf("%v: %v\n", v.i, v.v)
+		i = v.i
 	}
+	return
 }
 
-func for_each(f func(int)) (i int) {
-	defer func() {
-		recover()
-	}
-	for ; ; i++ {
-		f(i)
+type Entry[T any] struct {
+	i int
+	v T
+}
+
+func makeGenerator[T any](s ...T) (chan Entry[T], func()) {
+	c := make(chan Entry[T])
+	return c, func() {
+		for i, v := range s {
+			c <- Entry[T]{i, v}
+		}
+		close(c)
 	}
 }

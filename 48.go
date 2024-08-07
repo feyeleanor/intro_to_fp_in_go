@@ -1,27 +1,39 @@
 package main
+
 import . "fmt"
-import "os"
-import "strconv"
 
 func main() {
-	defer func() {
-		if x := recover(); x != nil {
-			Println("no factorial")
-		}
-	}()
-	x, _ := strconv.Atoi(os.Args[1])
-	Printf("%v!: %v\n", x, Factorial(x))
+	s := &Range[int]{0, 2, 5}
+	print_values(s)
+	print_values(s)
 }
 
-func Factorial(n int) int {
-	r := 1
-	switch {
-	case n < 0:
-		panic(n)
-	case n > 0:
-		for ; n > 0; n-- {
-			r *= n
-		}
+func print_values[T any](s Iterable[T]) (i int) {
+	s.Each(func(v T) {
+		Printf("%v: %v\n", i, v)
+		i++
+	})
+	return i
+}
+
+type Iterable[T any] interface {
+	Each(func(T))
+}
+
+type Ordinal interface {
+	int | int8 | int16 | int32 | int64 | uint | uint8 | uint16 | uint32 | uint64
+}
+
+type Range[T Ordinal] struct {
+	start T
+	step  T
+	count T
+}
+
+func (r *Range[T]) Each(f func(T)) {
+	r1 := *r
+	for ; r1.count > 0; r1.count-- {
+		f(r1.start)
+		r1.start += r1.step
 	}
-	return r
 }

@@ -1,35 +1,36 @@
 package main
-import "os"
-import "strconv"
+
+import . "fmt"
 
 func main() {
-	a := MakeAccumulator()
-	for _, v := range os.Args[1:] {
-		x, _ := strconv.Atoi(v)
-		a.Add(x)
+	print_values(Limit(5))
+	print_values(Slice[int]{0, 2, 4, 6, 8})
+}
+
+func print_values[T any](s Iterable[T]) (i int) {
+	s.Each(func(v T) {
+		Printf("%v: %v\n", i, v)
+		i++
+	})
+	return i
+}
+
+type Iterable[T any] interface {
+	Each(func(T))
+}
+
+type Limit int
+
+func (i Limit) Each(f func(int)) {
+	for v := range i {
+		f(int(v))
 	}
-	os.Exit(a.Int())
 }
 
-type Accumulator func(int) int
+type Slice[T any] []T
 
-func MakeAccumulator() Accumulator {
-	var y int
-	return func(x int) int {
-		y += x
-		return y
-	}
-}
-
-func (a Accumulator) Int() int {
-	return a(0)
-}
-
-func (a Accumulator) Add(x interface{}) {
-	switch x := x.(type) {
-	case int:
-		a(x)
-	case Accumulator:
-		a(x.Value())
+func (s Slice[T]) Each(f func(T)) {
+	for _, v := range s {
+		f(v)
 	}
 }

@@ -1,34 +1,29 @@
 package main
-import . "reflect"
+
 import . "fmt"
 
 func main() {
-	s := []int{0, 2, 4, 6, 8}
-		print_values(s)
-		print_values(func(i int) int {
-		return s[i]
-	})
+	c := make(chan Entry[int])
+	go sequence(c, 0, 2, 4, 6, 8)
+	print_channel(c)
 }
 
-func print_values(s interface{}) {
-	switch s := ValueOf(s); s.Kind() {
-	case Func:
-		for_each(func(i int) {
-			p := []Value{ ValueOf(i) }
-			Printf("%v: %v\n", i, s.Call(p)[0].Interface())
-		})
-	case Slice:
-		for_each(func(i int) {
-			Printf("%v: %v\n", i, s.Index(i).Interface())
-		})
+func print_channel[T any](c chan Entry[T]) (i int) {
+	for v := range c {
+		Printf("%v: %v\n", v.i, v.v)
+		i = v.i
 	}
+	return
 }
 
-func for_each(f func(int)) (i int) {
-	defer func() {
-		recover()
+type Entry[T any] struct {
+	i int
+	v T
+}
+
+func sequence[T any](c chan Entry[T], s ...T) {
+	for i, v := range s {
+		c <- Entry[T]{i, v}
 	}
-	for ; ; i++ {
-		f(i)
-	}
+	close(c)
 }

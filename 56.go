@@ -1,44 +1,22 @@
 package main
-import . "fmt"
-import "os"
-import "strconv"
+
+import (
+	"os"
+	"strconv"
+)
 
 func main() {
-	var errors int
 	for _, v := range os.Args[1:] {
-		SafeExecute(
-			func(i int) {
-				Printf("%v!: %v\n", i, Factorial(i))
-			},
-			func() {
-				if x := recover(); x != nil {
-					Printf("no defined value for %v\n", x)
-					errors++
-				}
-			},
-		)(v)
+		x, _ := strconv.Atoi(v)
+		a.Add(x)
 	}
-	os.Exit(errors)
+	os.Exit(int(a))
 }
 
-func SafeExecute(f func(int), e func()) func(string) {
-	return func(v string) {
-		defer e()
+var a Accumulator
 
-		if x, e := strconv.Atoi(v); e == nil {
-			f(x)
-		} else {
-			panic(v)
-		}
-	}
-}
+type Accumulator int
 
-func Factorial(n int) (r int) {
-	if n < 0 {
-		panic(n)
-	}
-	for r = 1; n > 0; n-- {
-		r *= n
-	}
-	return
+func (a *Accumulator) Add(y int) {
+	*a += Accumulator(y)
 }

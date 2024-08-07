@@ -22,14 +22,11 @@ type Integer interface {
 }
 
 func Factorial[T Integer](n T) (r T) {
-	r := 1
-	switch {
-	case n < 0:
+	if n < 0 {
 		panic(n)
-	case n > 0:
-		for ; n > 0; n-- {
-			r *= n
-		}
 	}
-	return r
+	for r = 1; n > 0; n-- {
+		r *= n
+	}
+	return
 }

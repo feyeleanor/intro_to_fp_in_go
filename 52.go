@@ -1,32 +1,22 @@
 package main
-import . "fmt"
-import "os"
-import "strconv"
+
+import (
+	"os"
+	"strconv"
+)
 
 func main() {
-	for _, v := range os.Args[1:] {
-		func() {
-			defer func() {
-				if x := recover(); x != nil {
-					Println("no factorial")
-				}
-			}()
-
-			if x, e := strconv.Atoi(v); e == nil {
-				Printf("%v!: %v\n", x, Factorial(x))
-			} else {
-				panic(v)
-			}
-		}()
-	}
+	x, _ := strconv.Atoi(os.Args[1])
+	y, _ := strconv.Atoi(os.Args[2])
+	os.Exit(add(x, y))
 }
 
-func Factorial(n int) (r int) {
-	if n < 0 {
-		panic(n)
-	}
-	for r = 1; n > 0; n-- {
-		r *= n
-	}
-	return
+type Scalar interface {
+	int | int8 | int16 | int32 | int64 |
+		uint | uint8 | uint16 | uint32 | uint64 |
+		float32 | float64
+}
+
+func add[T Scalar](x, y T) T {
+	return x + y
 }

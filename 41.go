@@ -1,22 +1,20 @@
 package main
-import "os"
-import "strconv"
+
+import . "fmt"
 
 func main() {
-	a := MakeAccumulator()
-	for _, v := range os.Args[1:] {
-		x, _ := strconv.Atoi(v)
-		a(x)
-	}
-	os.Exit(a(0))
+	s := Slice[int]{0, 2, 4, 6, 8}
+	i := 0
+	s.Each(func(v int) {
+		Printf("%v: %v\n", i, v)
+		i++
+	})
 }
 
-type Accumulator func(int) int
+type Slice[T any] []T
 
-func MakeAccumulator() Accumulator {
-	var y int
-	return func(x int) int {
-		y += x
-		return y
+func (i Slice[T]) Each(f func(T)) {
+	for _, v := range s {
+		f(v)
 	}
 }
