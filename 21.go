@@ -1,6 +1,6 @@
 package main
 
-import . "fmt"
+import "fmt"
 
 func main() {
 	c := make(chan Entry[int])
@@ -15,7 +15,7 @@ func main() {
 
 func print_channel[T any](c chan Entry[T]) (i int) {
 	for v := range c {
-		Printf("%v: %v\n", v.i, v.v)
+		fmt.Printf("%v: %v\n", v.i, v.v)
 		i = v.i
 	}
 	return

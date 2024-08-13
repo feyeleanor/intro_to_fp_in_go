@@ -1,7 +1,7 @@
 package main
 
 import (
-	. "fmt"
+	"fmt"
 	"os"
 	"strconv"
 )
@@ -9,7 +9,7 @@ import (
 func main() {
 	var errors int
 	f := func(i int) {
-		Printf("%v!: %v\n", i, Factorial(i))
+		fmt.Printf("%v!: %v\n", i, Factorial(i))
 	}
 	for _, v := range os.Args[1:] {
 		if !ForValidValues(f)(v) {
@@ -23,7 +23,7 @@ func ForValidValues[T Integer](f func(T)) func(string) bool {
 	return func(v string) (r bool) {
 		defer func() {
 			if x := recover(); x != nil {
-				Printf("no defined value for %v\n", x)
+				fmt.Printf("no defined value for %v\n", x)
 			}
 		}()
 

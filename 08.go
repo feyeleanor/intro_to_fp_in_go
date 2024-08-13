@@ -1,6 +1,6 @@
 package main
 
-import . "fmt"
+import "fmt"
 
 func main() {
 	print_slice([]int{0, 2, 4, 6, 8})
@@ -9,7 +9,7 @@ func main() {
 func print_slice(s any) {
 	if s, ok := s.([]int); ok {
 		for i, v := range s {
-			Printf("%v: %v\n", i, v)
+			fmt.Printf("%v: %v\n", i, v)
 		}
 	}
 }

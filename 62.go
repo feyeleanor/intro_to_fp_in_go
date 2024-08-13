@@ -11,7 +11,7 @@ func main() {
 	for i, v := range os.Args[1:] {
 		x, _ := strconv.Atoi(v)
 		a.Add(x)
-		a.Add(MakeAccumulator[int](i))
+		a.Add(MakeAccumulator(i))
 	}
 	os.Exit(a.Int())
 }
@@ -44,9 +44,9 @@ func (a Accumulator[T]) Add(x any) {
 	switch x := x.(type) {
 	case T:
 		a(x)
-		fmt.Printf("1>a + x == a + %v == %v\n", x, a(0))
+		fmt.Printf("1>a + x == a + %v == %v\n", x, a.Int())
 	case Accumulator[T]:
 		a(x(0))
-		fmt.Printf("2>a + x == a + %v == %v\n", x(0), a(0))
+		fmt.Printf("2>a + x == a + %v == %v\n", x(0), a.Int())
 	}
 }

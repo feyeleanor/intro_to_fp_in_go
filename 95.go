@@ -7,11 +7,12 @@ import (
 )
 
 func main() {
+	f := MakeFactorial[int]()
 	printErrors := IfPanics(PrintErrorMessage)
 	Each(os.Args[1:], func(v string) {
 		printErrors(
 			ValidInteger(v, func(i int) {
-				fmt.Printf("%v!: %v\n", i, Factorial(i))
+				fmt.Printf("%v!: %v\n", i, f(i))
 			}))
 	})
 }
@@ -51,14 +52,29 @@ func PrintErrorMessage() {
 	}
 }
 
-func Factorial[T Integer](n T) (r T) {
-	switch {
-	case n < 0:
-		panic(n)
-	case n == 0:
-		r = 1
-	default:
-		r = n * Factorial(n-1)
+func MakeFactorial[T Integer]() (f func(T) T) {
+	c := make(Cache[T])
+	return func(n T) (r T) {
+		if r = c[n]; r == 0 {
+			switch {
+			case n < 0:
+				panic(n)
+			case n == 0:
+				r = 1
+			default:
+				r = n * f(n-1)
+			}
+			c[n] = r
+			c.Dump()
+		}
+		return
 	}
-	return
+}
+
+type Cache[T Integer] map[T]T
+
+func (c Cache[T]) Dump() {
+	for k, v := range c {
+		fmt.Printf("c[%v] = %v\n", k, v)
+	}
 }

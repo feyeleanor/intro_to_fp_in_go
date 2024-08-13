@@ -1,7 +1,8 @@
 package main
 
 import (
-	. "fmt"
+	"fmt"
+	"math"
 	"reflect"
 )
 
@@ -19,17 +20,26 @@ func main() {
 func print_values(s any) {
 	switch s := reflect.ValueOf(s); s.Kind() {
 	case reflect.Func:
-		for i := 0; ; i++ {
-			p := []reflect.Value{reflect.ValueOf(i)}
-			if r := s.Call(p); r[1].Bool() {
-				Printf("5>s(%v): %v\n", i, s.Call(p)[0].Interface())
-			} else {
-				return
+		switch s.Type().NumIn() {
+		case 1: // assume func(int) (T, bool)
+			for i := range math.MaxInt {
+				p := []reflect.Value{reflect.ValueOf(i)}
+				if r := s.Call(p); r[1].Bool() {
+					fmt.Printf("1>%v: %v\n", i, s.Call(p)[0].Interface())
+				} else {
+					return
+				}
 			}
+		case 2: // assume func(func(int, T) bool)
+			// TODO:
+			//		for i, v := range s {
+			//			fmt.Printf("3>%v: %v\n", i, v)
+			//		}
 		}
+
 	case reflect.Slice:
-		for i := 0; i < s.Len(); i++ {
-			Printf("6>s[%v]: %v\n", i, s.Index(i).Interface())
+		for i := range s.Len() {
+			fmt.Printf("2>%v: %v\n", i, s.Index(i).Interface())
 		}
 	}
 }

@@ -1,25 +1,25 @@
 package main
 
 import (
-	. "fmt"
+	"fmt"
 	"os"
 	"strconv"
 )
 
 func main() {
 	var errors int
+	computeFactorial := ForValidValues(
+		func(i int) {
+			fmt.Printf("%v!: %v\n", i, Factorial(i))
+		},
+		func() {
+			if x := recover(); x != nil {
+				fmt.Printf("no defined value for %v\n", x)
+				errors++
+			}
+		})
 	for _, v := range os.Args[1:] {
-		ForValidValues(
-			func(i int) {
-				Printf("%v!: %v\n", i, Factorial(i))
-			},
-			func() {
-				if x := recover(); x != nil {
-					Printf("no defined value for %v\n", x)
-					errors++
-				}
-			},
-		)(v)
+		computeFactorial(v)
 	}
 	os.Exit(errors)
 }

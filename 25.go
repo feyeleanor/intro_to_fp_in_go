@@ -1,6 +1,6 @@
 package main
 
-import . "fmt"
+import "fmt"
 
 func main() {
 	c := make(Pipeline[int])
@@ -13,7 +13,7 @@ func main() {
 
 func print_channel[T any](p Pipeline[T]) (c int) {
 	p.each(func(i int, v T) {
-		Printf("%v: %v\n", i, v)
+		fmt.Printf("%v: %v\n", i, v)
 		c = i
 	})
 	return

@@ -1,6 +1,6 @@
 package main
 
-import . "fmt"
+import "fmt"
 
 func main() {
 	print_values(Limit(5))
@@ -9,7 +9,7 @@ func main() {
 
 func print_values[T any](s Iterable[T]) (i int) {
 	s.Each(func(v T) {
-		Printf("%v: %v\n", i, v)
+		fmt.Printf("%v: %v\n", i, v)
 		i++
 	})
 	return i

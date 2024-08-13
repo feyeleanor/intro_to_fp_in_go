@@ -1,7 +1,7 @@
 package main
 
 import (
-	. "fmt"
+	"fmt"
 	"os"
 	"strconv"
 )
@@ -9,11 +9,11 @@ import (
 func main() {
 	defer func() {
 		if x := recover(); x != nil {
-			Println("no factorial")
+			fmt.Println("no factorial")
 		}
 	}()
 	x, _ := strconv.Atoi(os.Args[1])
-	Printf("%v!: %v\n", x, Factorial(x))
+	fmt.Printf("%v!: %v\n", x, Factorial(x))
 }
 
 type Integer interface {

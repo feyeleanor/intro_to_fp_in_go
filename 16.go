@@ -1,6 +1,9 @@
 package main
 
-import . "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 func main() {
 	print_slice(func(i int, s ...int) int {
@@ -12,8 +15,8 @@ func print_slice[T any](f Iterator[T], s ...T) {
 	defer func() {
 		recover()
 	}()
-	for i := 0; ; i++ {
-		Printf("%v: %v\n", i, f(i, s...))
+	for i := range math.MaxInt {
+		fmt.Printf("%v: %v\n", i, f(i, s...))
 	}
 }
 

@@ -1,12 +1,12 @@
 package main
 
-import . "fmt"
+import "fmt"
 
 func main() {
 	var s Iterable[int] = Slice[int]{0, 2, 4, 6, 8}
 	i := 0
 	s.Each(func(v int) {
-		Printf("%v: %v\n", i, v)
+		fmt.Printf("%v: %v\n", i, v)
 		i++
 	})
 }

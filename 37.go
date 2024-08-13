@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 	. "reflect"
 )
 
@@ -19,10 +20,10 @@ func main() {
 func print_values(s any) {
 	switch s := ValueOf(s); s.Kind() {
 	case Func:
-		for i := 0; ; i++ {
+		for i := range math.MaxInt {
 			p := []Value{ValueOf(i)}
 			if r := s.Call(p); r[1].Bool() {
-				fmt.Printf("5>s(%v): %v\n", i, s.Call(p)[0].Interface())
+				fmt.Printf("1>%v: %v\n", i, s.Call(p)[0].Interface())
 			} else {
 				return
 			}
@@ -31,8 +32,8 @@ func print_values(s any) {
 		defer func() {
 			recover()
 		}()
-		for i := 0; ; i++ {
-			fmt.Printf("6>[%v]: %v\n", i, s.Index(i).Interface())
+		for i := range math.MaxInt {
+			fmt.Printf("2>%v: %v\n", i, s.Index(i).Interface())
 		}
 	}
 }

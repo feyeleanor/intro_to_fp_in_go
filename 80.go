@@ -1,7 +1,7 @@
 package main
 
 import (
-	. "fmt"
+	"fmt"
 	"os"
 	"strconv"
 )
@@ -11,7 +11,7 @@ func main() {
 		IfPanics(
 			PrintErrorMessage,
 			ValidInteger(v, func(i int) {
-				Printf("%v!: %v\n", i, Factorial(i))
+				fmt.Printf("%v!: %v\n", i, Factorial(i))
 			}))
 	}
 }
@@ -38,7 +38,7 @@ func IfPanics(e, f func()) {
 
 func PrintErrorMessage() {
 	if x := recover(); x != nil {
-		Printf("no defined value for %v\n", x)
+		fmt.Printf("no defined value for %v\n", x)
 	}
 }
 

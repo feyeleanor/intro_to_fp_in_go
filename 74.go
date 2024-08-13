@@ -1,7 +1,7 @@
 package main
 
 import (
-	. "fmt"
+	"fmt"
 	"os"
 	"strconv"
 )
@@ -9,12 +9,12 @@ import (
 func main() {
 	defer func() {
 		if x := recover(); x != nil {
-			Println("no factorial")
+			fmt.Println("no factorial")
 		}
 	}()
 	for _, v := range os.Args[1:] {
 		if x, e := strconv.Atoi(v); e == nil {
-			Printf("%v!: %v\n", x, Factorial(x))
+			fmt.Printf("%v!: %v\n", x, Factorial(x))
 		} else {
 			panic(v)
 		}

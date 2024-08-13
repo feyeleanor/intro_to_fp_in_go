@@ -10,7 +10,7 @@ func main() {
 	a := MakeAccumulator[int]()
 	for i, v := range os.Args[1:] {
 		x, _ := strconv.Atoi(v)
-		a = a.Add(x).Add(MakeAccumulator[int](i))
+		a = a.Add(x).Add(MakeAccumulator(i))
 	}
 	os.Exit(a.Int())
 }
